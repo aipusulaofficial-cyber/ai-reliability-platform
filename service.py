@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from opentelemetry import trace
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from reliability_domain import SLO, burn_rate, error_budget, sli
 
@@ -23,7 +23,7 @@ tracer = trace.get_tracer("ai-reliability-platform")
 
 class Request(BaseModel):
     key: str
-    payload: dict = {}
+    payload: dict = Field(default_factory=dict)
 
 
 @app.get("/health/live")
