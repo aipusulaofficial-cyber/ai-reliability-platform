@@ -22,8 +22,8 @@ tracer = trace.get_tracer("ai-reliability-platform")
 
 
 class Request(BaseModel):
-    key: str
-    payload: dict = Field(default_factory=dict)
+    key: str = Field(min_length=1, max_length=128)
+    payload: dict[str, object] = Field(default_factory=dict)
 
 
 @app.get("/health/live")
@@ -38,15 +38,33 @@ def ready() -> dict[str, str]:
 
 @app.post("/v1/reliability")
 def handle(r: Request) -> dict[str, float | str]:
+    key = r.key.strip()
+    if not key:
+        raise HTTPException(status_code=422, detail="key must not be blank")
+
+    try:
+        target = float(r.payload.get("target", 0.99))
+        window_requests = int(r.payload.get("window_requests", 1000))
+        total = int(r.payload.get("total", 0))
+        success = int(r.payload.get("successes", 0))
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail="reliability inputs must be numeric") from exc
+
+    if not 0.0 < target <= 1.0:
+        raise HTTPException(status_code=422, detail="target must be between 0 and 1")
+    if window_requests <= 0:
+        raise HTTPException(status_code=422, detail="window_requests must be positive")
+    if total <= 0:
+        raise HTTPException(status_code=422, detail="total must be positive")
+    if not 0 <= success <= total:
+        raise HTTPException(
+            status_code=422,
+            detail="successes must be between 0 and total",
+        )
+
     with tracer.start_as_current_span("reliability.evaluate"):
         try:
-            slo = SLO(
-                r.key,
-                float(r.payload.get("target", 0.99)),
-                int(r.payload.get("window_requests", 1000)),
-            )
-            total = int(r.payload.get("total", 0))
-            success = int(r.payload.get("successes", 0))
+            slo = SLO(key, target, window_requests)
             observed = sli(success, total)
             return {
                 "slo": slo.name,
