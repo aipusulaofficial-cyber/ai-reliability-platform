@@ -1,11 +1,31 @@
-# ai-reliability-platform
+# AI Reliability Platform
 
-Production-oriented AI systems engineering reference implementation.
+A reliability engineering reference implementation for AI services: bounded execution, explicit failure semantics, health-aware operation and production safety controls.
 
-## Engineering focus
-- Explicit domain boundaries and replaceable adapters
-- Deterministic behavior and failure semantics
-- Operational readiness and CI
-- Production trade-offs documented in architecture and ADRs
+## Reliability model
+```text
+request
+ -> timeout / budget
+ -> operation
+ -> retry policy when safe
+ -> health + telemetry
+ -> explicit success or failure
+```
 
-This repository is designed as a runnable foundation, not pseudocode.
+## Operational contracts
+- Timeouts bound work instead of allowing indefinite execution.
+- Retries are applied only where the operation is safe to repeat.
+- Failure states remain visible to callers and operators.
+- Health probes represent runtime state separately from business responses.
+- Resource limits and non-root deployment reduce blast radius.
+
+## Delivery controls
+GitHub Actions use least privilege, immutable action references where configured, checkout credential restrictions and workflow timeouts. Tests, dependency/filesystem scanning and SBOM generation are delivery gates.
+
+## Runtime
+Kubernetes manifests include non-root execution, hardened security context, health probes and resource controls; Helm provides deployment configuration and scaling controls.
+
+## Evidence
+[docs/PRINCIPAL-ENGINEERING.md](docs/PRINCIPAL-ENGINEERING.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [ADRs](ADRs/)
+
+This project treats reliability as executable behavior, not a list of aspirations.
