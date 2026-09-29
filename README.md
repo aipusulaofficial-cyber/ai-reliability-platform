@@ -29,3 +29,6 @@ Kubernetes manifests include non-root execution, hardened security context, heal
 [docs/PRINCIPAL-ENGINEERING.md](docs/PRINCIPAL-ENGINEERING.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [ADRs](ADRs/)
 
 This project treats reliability as executable behavior, not a list of aspirations.
+
+## Portfolio evidence
+[Portfolio evidence map](docs/PORTFOLIO_EVIDENCE.md) — executable proof, architecture mapping and reviewable CI evidence.
