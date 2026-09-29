@@ -23,6 +23,7 @@ jobs:
       - name: Execute domain evidence
         run: |
           mkdir -p artifacts
+          set -o pipefail
           python benchmarks/reliability_evidence.py | tee artifacts/reliability-domain-evidence.json
       - name: Validate evidence artifact
         run: python -m json.tool artifacts/reliability-domain-evidence.json >/dev/null
