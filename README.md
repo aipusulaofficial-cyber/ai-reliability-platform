@@ -1,5 +1,10 @@
 # AI Reliability Platform
 
+[![CI](https://github.com/aipusulaofficial-cyber/ai-reliability-platform/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/ai-reliability-platform/actions/workflows/ci.yml)
+[![Production Tests](https://github.com/aipusulaofficial-cyber/ai-reliability-platform/actions/workflows/production-tests.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/ai-reliability-platform/actions/workflows/production-tests.yml)
+[![Supply Chain](https://github.com/aipusulaofficial-cyber/ai-reliability-platform/actions/workflows/supply-chain.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/ai-reliability-platform/actions/workflows/supply-chain.yml)
+
+
 A reliability engineering reference implementation for AI services: bounded execution, explicit failure semantics, health-aware operation and production safety controls.
 
 ## Reliability model
