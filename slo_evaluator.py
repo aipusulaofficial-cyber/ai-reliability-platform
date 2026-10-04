@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass
 
 
@@ -8,14 +9,29 @@ class BurnRateWindow:
     target: float
 
     def value(self) -> float:
-        if not (0 <= self.good_events <= self.total_events) or self.total_events < 1:
-            raise ValueError("invalid event counts")
-        if not 0 < self.target < 1:
-            raise ValueError("invalid SLO target")
+        if (
+            isinstance(self.good_events, bool)
+            or not isinstance(self.good_events, int)
+            or isinstance(self.total_events, bool)
+            or not isinstance(self.total_events, int)
+            or self.total_events < 1
+            or self.good_events < 0
+            or self.good_events > self.total_events
+            or isinstance(self.target, bool)
+            or not isinstance(self.target, (int, float))
+            or not math.isfinite(self.target)
+            or not 0 < self.target < 1
+        ):
+            raise ValueError("invalid SLO window")
         error_rate = 1 - self.good_events / self.total_events
         return error_rate / (1 - self.target)
 
     def breaching(self, threshold: float = 1.0) -> bool:
-        if threshold <= 0:
-            raise ValueError("threshold must be positive")
+        if (
+            isinstance(threshold, bool)
+            or not isinstance(threshold, (int, float))
+            or not math.isfinite(threshold)
+            or threshold <= 0
+        ):
+            raise ValueError("threshold must be finite and positive")
         return self.value() > threshold
