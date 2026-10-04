@@ -4,7 +4,7 @@ from dataclasses import dataclass
 class SLO:
     name:str; target:float; window_requests:int
     def __post_init__(self):
-        if not 0<self.target<=1 or self.window_requests<1:raise ValueError("invalid SLO")
+        if not 0<self.target<1 or self.window_requests<1:raise ValueError("invalid SLO")
 
 def sli(successes:int,total:int)->float:
     if total<1 or successes<0 or successes>total:raise ValueError("invalid measurements")
