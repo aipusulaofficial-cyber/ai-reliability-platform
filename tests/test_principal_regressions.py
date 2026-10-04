@@ -11,3 +11,9 @@ def test_invalid_event_counts_rejected(good, total):
 
 def test_valid_burn_rate():
     assert BurnRateWindow(99, 100, 0.99).value() == pytest.approx(1.0)
+
+
+def test_hundred_percent_slo_target_is_rejected():
+    from reliability_domain import SLO
+    with pytest.raises(ValueError):
+        SLO("availability", 1.0, 1000)
